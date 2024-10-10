@@ -1,0 +1,13 @@
+This project makes use of the following libraries, which are licensed under the Apache License, Version 2.0 :
+
+1. Transformers
+Library: Transformers
+Copyright: © 2019-present, Hugging Face team
+License: Apache License, Version 2.0
+License URL: http://www.apache.org/licenses/LICENSE-2.0
+
+2. Sentence-Transformers
+Library: Sentence-Transformers
+Copyright: © 2020-present, UKP Lab, Technical University of Darmstadt
+License: Apache License, Version 2.0
+License URL: http://www.apache.org/licenses/LICENSE-2.0
