@@ -1,34 +1,37 @@
 import json
 import os
+from bs4 import BeautifulSoup
+# import 
 
-from Cosine import Cosine_similarity
-from Bert import Bert_similarity
-from Sbert import Sbert_similarity
+# from Evaluator import evaluation
+# from Summary import summary
 
 
 if (__name__ == "__main__") :
 
-    input_file = "../data/Crawling_DB/test_data.json"
-    output_file = "../data/Ready_DB/test_data.json"
+    input_file = "../data/Crawling_DB/test.json"
+    output_file = "../data/Ready_DB/test.json"
 
     
-    with open(input_file, "r") as file : 
+    with open(input_file, "r", encoding='utf-8') as file : 
         data = json.load(file)
 
-
-    similarity = Cosine_similarity(data["title"], data["content"])
-    data["Cosine_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
-    similarity = Bert_similarity(data["title"], data["content"])
-    data["Bert_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
-    similarity = Sbert_similarity(data["title"], data["content"])
-    data["Sbert_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
+    title = data["title"]
     
-    with open(output_file, "w") as file :
-        json.dump(data, file, indent=4)
+    raw_contents = data["raw_contents"]
+    soup = BeautifulSoup(raw_contents, "html.parser")
+    plain_text = soup.get_text()
 
-    # os.remove(input_file)
+    # summary_text = summary(plain_text)
+    summary_text = "test_summary"
     
+    # similarity = evaluation(title, summary) * 100
+    similarity = 81.5
+
+    data["summary"] = summary_text
+    data["similarity"] = similarity
+    
+    with open(output_file, "w", encoding = "utf-8") as file :
+        json.dump(data, file, indent = 4, ensure_ascii = False)
+              
     print("Done")
