@@ -1,7 +1,6 @@
 import json
 import os
 from bs4 import BeautifulSoup
-# import 
 
 # from Evaluator import evaluation
 # from Summary import summary
@@ -25,7 +24,7 @@ if (__name__ == "__main__") :
     # summary_text = summary(plain_text)
     summary_text = "test_summary"
     
-    # similarity = evaluation(title, summary) * 100
+    # similarity = evaluation(title, plain_text) * 100
     similarity = 81.5
 
     data["summary"] = summary_text
