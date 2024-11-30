@@ -23,7 +23,7 @@ def extract_as_str (text) :
 
 if (__name__ == "__main__") :
     
-    text =" "
+    text =""
     
     _list = extract_as_list (text)
     _str = extract_as_str (text)
