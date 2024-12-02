@@ -75,4 +75,4 @@ if (__name__ == "__main__") :
     if count > 0 :
         score /= count
 
-    print(score)
+    # print(score)
