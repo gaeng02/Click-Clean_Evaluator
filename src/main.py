@@ -1,36 +1,56 @@
 import json
 import os
+import re
 from bs4 import BeautifulSoup
 
-# from Evaluator import evaluation
-# from Summary import summary
+from evaluate.Comparison import evaluation
+from summary.Summarization import summarize_text
+from extract_sentence import extract_as_list, extract_as_str 
 
-
+    
 if (__name__ == "__main__") :
 
-    input_file = "../data/Crawling_DB/test.json"
-    output_file = "../data/Ready_DB/test.json"
-
+    input_path = "../data/Crawling_DB"
+    output_path = "../data/Ready_DB"
     
-    with open(input_file, "r", encoding='utf-8') as file : 
-        data = json.load(file)
+    for filename in os.listdir(input_path) :
 
-    title = data["title"]
-    
-    raw_contents = data["raw_contents"]
-    soup = BeautifulSoup(raw_contents, "html.parser")
-    plain_text = soup.get_text()
+        try : 
+        
+            input_file = os.path.join(input_path, filename)
+            
+            with open(input_file, "r", encoding='utf-8') as file : 
+                data = json.load(file)
 
-    # summary_text = summary(plain_text)
-    summary_text = "test_summary"
-    
-    # similarity = evaluation(title, plain_text) * 100
-    similarity = 81.5
+            title = data["title"]
+            
+            body = data["body"]
+            soup = BeautifulSoup(body, "html.parser")
 
-    data["summary"] = summary_text
-    data["similarity"] = similarity
-    
-    with open(output_file, "w", encoding = "utf-8") as file :
-        json.dump(data, file, indent = 4, ensure_ascii = False)
-              
-    print("Done")
+            text_content = soup.get_text()
+
+            # need to call "extract_sentence.py" to change contents to sentence list
+
+            summary_text = summarize_text(extract_as_str(text_content))
+
+            similarity = round(evaluation(title, extract_as_list(text_content)) * 100, 3)
+
+            '''
+            if summary_text == "" :
+                print("Null Summary", filename)
+                print(extract_as_str(text_content))
+            '''
+
+            data["summary"] = summary_text
+            data["probability"] = similarity
+
+            output_file = os.path.join(output_path, filename)
+            
+            with open(output_file, "w", encoding = "utf-8") as file :
+                json.dump(data, file, indent = 4, ensure_ascii = False)
+
+        except :
+            # print(filename)
+            continue
+
+    # print("All Done")
