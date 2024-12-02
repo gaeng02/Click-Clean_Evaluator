@@ -69,30 +69,3 @@ def evaluation (title, sentences) :
         score /= count
 
     return score
-    
-
-if (__name__ == "__main__") :
-    '''
-    input_file = "../data/Crawling_DB/test.json"
-    output_file = "../data/Ready_DB/test.json"
-
-    with open(input_file, "r") as file : 
-        data = json.load(file)
-
-
-    similarity = Cosine_similarity(data["title"], data["content"])
-    data["Cosine_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
-    similarity = Bert_similarity(data["title"], data["content"])
-    data["Bert_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
-    similarity = Sbert_similarity(data["title"], data["content"])
-    data["Sbert_Similarity"] = float(f"{(similarity * 100) : .1f}")
-
-    with open(output_file, "w") as file :
-        json.dump(data, file, indent=4)
-
-    os.remove(input_file)
-
-    print("Done")
-    '''
