@@ -1,56 +1,77 @@
 import json
-import os
-import re
+import time
+import boto3
+import pymysql
 from bs4 import BeautifulSoup
 
-from evaluate.Comparison import evaluation
-from summary.Summarization import summarize_text
-from extract_sentence import extract_as_list, extract_as_str 
+from Comparison import evaluation
+from Summarization import summarize_text
+from extract_sentence import extract_as_list, extract_as_str
 
-    
-if (__name__ == "__main__") :
 
-    input_path = "../data/Crawling_DB"
-    output_path = "../data/Ready_DB"
-    
-    for filename in os.listdir(input_path) :
+def post_to_rds (data) : 
 
-        try : 
+    try :
+        # have to set !!!
+        conn = pymysql.connect(
+            host = "",
+            user = "",
+            password = "",
+            database = ""
+        )
+
+        with conn.cursor() as cursor :
+            
+            sql = """
+                INSERT INTO news_data (title, body, summary, author, url, category, created_at, probability)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            
+            cursor.execute(sql, (
+                data["title"],       
+                data["body"],        
+                data["summary"],  
+                data["media"],   
+                data["author"],    
+                data["url"],      
+                data["category"],  
+                data["created_at"],  
+                data["probability"]
+            ))
+            
+        connection.commit()
         
-            input_file = os.path.join(input_path, filename)
-            
-            with open(input_file, "r", encoding='utf-8') as file : 
-                data = json.load(file)
+    except Exception as e :
+        print(e)
+        
+    finally :
+        if connection :
+            connection.close()
 
-            title = data["title"]
-            
-            body = data["body"]
-            soup = BeautifulSoup(body, "html.parser")
 
-            text_content = soup.get_text()
+def process_message (message) :
 
-            # need to call "extract_sentence.py" to change contents to sentence list
+    try :
+        data = json.loads(message)
 
-            summary_text = summarize_text(extract_as_str(text_content))
+        title = data["title"]
+        
+        body = data["body"]
+        soup = BeautifulSoup(body, "html.parser")
+        text_content = soup.get_text()
 
-            similarity = round(evaluation(title, extract_as_list(text_content)) * 100, 3)
+        data["summary"] = summarize_text(extract_as_str(text_content))
 
-            '''
-            if summary_text == "" :
-                print("Null Summary", filename)
-                print(extract_as_str(text_content))
-            '''
+        data["probability"] = round(evaluation(title, extract_as_list(text_content)) * 100, 3)
 
-            data["summary"] = summary_text
-            data["probability"] = similarity
+        post_to_rds(data)
 
-            output_file = os.path.join(output_path, filename)
-            
-            with open(output_file, "w", encoding = "utf-8") as file :
-                json.dump(data, file, indent = 4, ensure_ascii = False)
+    except Exception as e :
+        print(e)
 
-        except :
-            # print(filename)
-            continue
 
-    # print("All Done")
+def lambda_handler (event, context) :
+    
+    for record in event['Records'] :
+        process_message(record)
+        

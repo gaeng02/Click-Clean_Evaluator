@@ -1,4 +1,8 @@
+import json
+import os
 from konlpy.tag import Okt
+
+Okt = Okt()
 
 def Split_sentence (sentence) :
     
@@ -12,18 +16,7 @@ def Split_sentence (sentence) :
     return return_token
 
 
-def Print (word, num, size) :
-    for i in range (size) :
-        print(word[i], num[i])
-    
-
-if (__name__ == "__main__") :
-
-    Okt = Okt()
-
-    title = ""
-    
-    sentences = [    ]
+def evaluation (title, sentences) :
 
     word_counts = {}
 
@@ -65,14 +58,25 @@ if (__name__ == "__main__") :
 
     score = 0
     count = 0
-
+    
     for word in _title :
-        if word in word_counts : 
+        
+        if word in word_counts :
+            
             value = word_counts[word]
-            score += norm_cdf[value] 
+            if (norm_cdf[value] > 0.8) : score += 1
+            elif (norm_cdf[value] > 0.6) : score += 0.85
+            elif (norm_cdf[value] > 0.4) : score += 0.7
+            elif (norm_cdf[value] > 0.2) : score += 0.55
+            else : score += 4
+
             count += 1
 
     if count > 0 :
         score /= count
 
-    # print(score)
+    size = len(_title)
+    
+    score *= min(1, ((count * 1.25) / size))
+
+    return score
