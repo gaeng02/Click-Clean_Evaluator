@@ -77,6 +77,6 @@ def evaluation (title, sentences) :
 
     size = len(_title)
     
-    score *= min(1, ((count * 1.25) / size))
+    # score *= min(1, ((count * 1.25) / size))
 
     return score
