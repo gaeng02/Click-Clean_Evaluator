@@ -29,32 +29,6 @@ def evaluation (title, sentences) :
             if word in word_counts : word_counts[word] += 1
             else : word_counts[word] = 1
 
-    '''
-    # Spectrogram Normalization
-    
-    max_level = max(word_counts.values())
-
-    pixels = 0
-    pixel_level = [0] * (max_level + 1)
-    
-    for item, value in word_counts.items() :
-        
-        pixels += value
-        pixel_level[value] += value
-
-
-    cumulative_sum = 0
-    cdf = [0] * (max_level + 1)
-    
-    for i in range (max_level) :
-        cumulative_sum += pixel_level[i+1]
-        cdf[i+1] = round(cumulative_sum * max_level / pixels, 6)
-
-    norm_cdf = [0] * (max_level + 1)
-    for i in range (max_level) :
-        norm_cdf[i+1] = round(cdf[i+1] / max_level, 5)
-    '''
-
     # Scoring
     _title = Split_sentence (title)
 
