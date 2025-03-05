@@ -121,6 +121,7 @@ def lambda_handler (event, context) :
     for record in event['Records'] :
         process_message(record)
 
+
 if (__name__ == "__main__") : 
     save_as_json()
     print("Done")
