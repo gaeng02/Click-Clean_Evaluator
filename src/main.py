@@ -5,7 +5,7 @@ import pymysql
 from bs4 import BeautifulSoup
 import os
 
-from Comparison import evaluation
+from Comparision import evaluation
 from Summarization import summarize_text
 from extract_sentence import extract_as_list, extract_as_str
 
