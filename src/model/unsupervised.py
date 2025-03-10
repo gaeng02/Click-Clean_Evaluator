@@ -28,9 +28,16 @@ def build_model (features, eps = 0.5, min_samples = 2) :
 
 
 def predict (data) :
-    
 
+    model = joblib.load("model.pkl")
+    scaler = joblib.load("scaler.pkl")
+
+    scaled_data = scaler.transform(data)
+    cluster = dbscan.fit_predict(scaled_data)
+
+    return cluster
+    
 
 if (__name__ == "__main__") :
     
-    ;
+    build_model()
