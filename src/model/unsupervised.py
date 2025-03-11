@@ -6,25 +6,23 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.metrics.pairwise import cosine_similarity
 
 
-def build_model (features, eps = 0.5, min_samples = 2) :
-    
+def build_model (features) :
     '''
-    model : DBSCAN 
+    model : Centroid Based Anomaly Detection
     '''
     
     # feature scaling
     scaler = StandardScaler()
     features_scaled = scaler.fit_transform(features)
 
-    # clustering 
-    dbscan = DBSCAN(eps = eps, min_samples = min_samples, metric = "euclidean")
-    clusters = dbscan.fit_predict(features_scaled)
-
-    # save
-    joblib.dump(dbscan, "model.pkl")
-    joblib.dump(scaler, "scaler.pkl")
+    # mean_vector
+    model = np.mean(features_scaled, axis = 0)
     
-    return clusters
+    # save
+    joblib.dump(model, "model.pkl")
+    joblib.dump(scaler, "scaler.pkl")
+
+    return ;
 
 
 def predict (data) :
@@ -32,10 +30,17 @@ def predict (data) :
     model = joblib.load("model.pkl")
     scaler = joblib.load("scaler.pkl")
 
-    scaled_data = scaler.transform(data)
-    cluster = dbscan.fit_predict(scaled_data)
+    scaled = scaler.transform(data)
+    similarity = cosine_similarity(scaled, mean_vector.reshape(1, -1))[0, 0]
 
-    return cluster
+    # -1 <= similarity <= 1
+    # min-max normalization
+    result = (similarity + 1) / 2
+    # for percent
+    # significant : 2
+    result = round(result * 100, 2)
+
+    return result
     
 
 if (__name__ == "__main__") :
