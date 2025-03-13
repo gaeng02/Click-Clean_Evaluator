@@ -31,7 +31,7 @@ def predict (data) :
     scaler = joblib.load("scaler.pkl")
 
     scaled = scaler.transform(data)
-    similarity = cosine_similarity(scaled, mean_vector.reshape(1, -1))[0, 0]
+    similarity = cosine_similarity(scaled, model.reshape(1, -1))[0, 0]
 
     # -1 <= similarity <= 1
     # min-max normalization
@@ -45,4 +45,4 @@ def predict (data) :
 
 if (__name__ == "__main__") :
     
-    build_model()
+    build_model(features)
