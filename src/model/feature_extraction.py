@@ -27,15 +27,32 @@ okt = Okt()
 def get_ratio (title) :
     
     tokens = okt.pos(title)
-    total = len(tokens) if tokens else 1
+
+    # count 할 형태소 종류
+    pos_token = ["Noun", "Verb", "Adjective", "Conjunction", "Alpha", "Number"]
     
-    cnt = 0 # for count adverb, interjection
+    total = 0 # for count real words
+    cnt = 0  # for count adverb, interjection
     
+
     for _, pos in tokens :
+
+        if pos in pos_token :
+            total += 1
+            
         if pos in ["Adverb", "Exclamation"] :
             cnt += 1
 
-    
     ratio = cnt / total
     
     return ratio
+
+
+def get_X (title, content) : 
+
+    X = [0, 0]
+
+    X[0] = get_cosine(title, content)
+    X[1] = get_ratio(title)
+
+    return X
