@@ -5,13 +5,15 @@ from konlpy.tag import Okt
 Okt = Okt()
 
 def Split_sentence (sentence) :
+
+    stop_words = ["있다"]  # removed_useless tag
     
     filtered = sentence.replace('.', '').replace(',','').replace("'","").replace('·', ' ').replace('=','').replace('\n','')
 
     token = Okt.pos(sentence, stem = True)
 
     filtered_token = [word for word, tag in token if tag not in ["Josa", "Punctuation", "Suffix"]]
-    return_token = [word for word in filtered_token if word not in ["있다"]] # removed_useless tag
+    return_token = [word for word in filtered_token if word not in stop_words] 
 
     return return_token
 
